@@ -9,13 +9,13 @@ Phase 0 では Resolve API との連携基盤を構築。
 
 ## 現在のステータス
 
-**Phase 0: Resolve連携の土台** - 進行中
+**Phase 0: Resolve連携の土台** - ✅ 完了 (2024-12-20)
 
 - [x] Resolve Python API 接続
 - [x] クリップ取得・ノード操作
 - [x] SetCDL による色補正反映
-- [ ] JSON パラメータ読み込み
-- [ ] 完成版スクリプト
+- [x] JSON パラメータ読み込み
+- [x] 完成版スクリプト
 
 ## 要件
 
@@ -75,7 +75,7 @@ Preferences → System → General → External scripting using → **Local**
 
 | Phase | 内容 | 状態 |
 |-------|------|------|
-| 0 | Resolve連携の土台 | 進行中 |
+| 0 | Resolve連携の土台 | ✅ 完了 |
 | 1 | シーン分類 + ルールベース補正 | 未着手 |
 | 2 | 基本補正推定モデル導入 | 未着手 |
 | 3 | ルック選択 | 未着手 |
