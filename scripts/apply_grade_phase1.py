@@ -36,9 +36,14 @@ LIMITS = {
 
 # 安全クランプ（Phase 1）
 SAFETY_CLAMPS = {
-    "exposure_ev": (-1.0, 1.0),
+    "exposure_ev": (-1.0, 1.5),  # S-Log3用に上限を拡大
     "contrast_factor": (0.8, 1.3)
 }
+
+# S-Log3検出しきい値
+SLOG3_LUMA_MAX = 0.42       # S-Log3は低輝度
+SLOG3_SATURATION_MAX = 0.25  # S-Log3は低彩度
+SLOG3_SHADOW_MAX = 0.05      # S-Log3はシャドウが潰れていない
 
 # =============================================================================
 # ユーティリティ
@@ -133,6 +138,7 @@ def extract_metrics(thumbnail_data):
 # =============================================================================
 
 SCENE_ADJUSTMENTS = {
+    "slog3_base": {"exposure_ev": 0.8, "contrast_factor": 1.1, "desc": "S-Log3ベース補正"},
     "outdoor_day": {"exposure_ev": -0.3, "contrast_factor": 1.05, "desc": "屋外昼間"},
     "indoor_human": {"exposure_ev": 0.0, "contrast_factor": 1.0, "desc": "室内人物"},
     "night": {"exposure_ev": 0.5, "contrast_factor": 1.15, "desc": "夜景"}
@@ -143,7 +149,15 @@ def classify_scene(metrics):
     avg_luma = metrics.get("avg_luma", 0.5)
     saturation_avg = metrics.get("saturation_avg", 0.0)
     shadow_ratio = metrics.get("shadow_ratio", 0.0)
+    highlight_ratio = metrics.get("highlight_ratio", 0.0)
     face_detected = metrics.get("face_detected", False)
+
+    # S-Log3検出: 低輝度 + 低彩度 + シャドウ/ハイライトが潰れていない
+    if (avg_luma < SLOG3_LUMA_MAX and
+        saturation_avg < SLOG3_SATURATION_MAX and
+        shadow_ratio < SLOG3_SHADOW_MAX and
+        highlight_ratio < 0.01):
+        return "slog3_base"
 
     if face_detected:
         return "indoor_human"
